@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 
+interface Location {
+  lng: number;
+  lat: number;
+  place_name?: string;
+}
+
 interface Key {
   id: number;
   place_name: string;
+  center: [number, number];
 }
 
-interface fromProp{
-    from:string
-}
-
-const AutocompleteInput = ({from}:fromProp) => {
+const AutocompleteInput = ({from, onLocationSelect}: {from: string; onLocationSelect: (location: Location) => void;}) => {
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<Key[]>([]);
   const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
@@ -36,6 +39,10 @@ const AutocompleteInput = ({from}:fromProp) => {
 
   const handleSelect = (place: Key) => {
     setInputValue(place.place_name); // Set selected place name as input value
+    onLocationSelect({
+      lng: place.center[0],
+      lat: place.center[1],
+    });
     setSuggestions([]); // Clear suggestions
     setShowDropdown(false); // Hide dropdown
   };

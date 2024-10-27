@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useMap } from '@/context/MapContext';
 
 interface Location {
   lng: number;
@@ -10,6 +11,7 @@ interface Location {
 }
 
 const MapComponent = () => {
+  const { pickup, dropoff, setPickup, setDropoff } = useMap();
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -20,8 +22,8 @@ const MapComponent = () => {
   const pickupMarker = useRef<maplibregl.Marker | null>(null);
   const dropoffMarker = useRef<maplibregl.Marker | null>(null);
   
-  const [pickup, setPickup] = useState<Location | null>(null);
-  const [dropoff, setDropoff] = useState<Location | null>(null);
+  // const [pickup, setPickup] = useState<Location | null>(null);
+  // const [dropoff, setDropoff] = useState<Location | null>(null);
 
   const drawRoute = async (start: Location, end: Location) => {
     if (!map.current) return;
@@ -106,6 +108,8 @@ const MapComponent = () => {
     }
   };
 
+
+
   // Initialize map
   useEffect(() => {
     if (map.current) return;
@@ -131,6 +135,9 @@ const MapComponent = () => {
       map.current?.remove();
     };
   }, []);
+
+
+
 
   // Handle map clicks
   useEffect(() => {
