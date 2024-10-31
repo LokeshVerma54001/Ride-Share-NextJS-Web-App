@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useMap } from '@/context/MapContext';
+import { useUser } from '@/context/UserContext';
 
 interface Location {
   lng: number;
@@ -12,6 +13,8 @@ interface Location {
 
 const MapComponent = () => {
   const { pickup, dropoff, setPickup, setDropoff } = useMap();
+  const {setUserLocation} = useUser();
+
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -44,7 +47,7 @@ const MapComponent = () => {
       const coords = `${start.lng},${start.lat};${end.lng},${end.lat}`;
       const response = await fetch(
         `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`
-      );
+    );
 
       if (!response.ok) {
         throw new Error('Failed to fetch route');
@@ -112,7 +115,7 @@ const MapComponent = () => {
 
   // Initialize map
   useEffect(() => {
-    if (map.current) return;
+    // if (map.current) return;
 
     map.current = new maplibregl.Map({
       container: mapContainer.current as HTMLDivElement,
@@ -165,6 +168,7 @@ const MapComponent = () => {
           });
         }
         setPickup({ lng, lat });
+        setUserLocation({lng, lat});//user location set
       } else {
         if (dropoffMarker.current) {
           dropoffMarker.current.setLngLat([lng, lat]);
@@ -204,13 +208,13 @@ const MapComponent = () => {
   return (
     <div className="flex flex-col space-y-4">
       {/* Control buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-4 mt-5">
         <button
           onClick={() => setIsSettingPickup(true)}
           className={`px-4 py-2 rounded-md transition-colors ${
             isSettingPickup 
-              ? 'bg-red-500 text-white' 
-              : 'bg-gray-100 hover:bg-gray-200'
+              ? 'bg-black text-white' 
+              : 'font-bold border-l bg-gray-100 hover:bg-gray-200 border border-black'
           }`}
         >
           Set Pickup
@@ -219,8 +223,8 @@ const MapComponent = () => {
           onClick={() => setIsSettingPickup(false)}
           className={`px-4 py-2 rounded-md transition-colors ${
             !isSettingPickup 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-100 hover:bg-gray-200'
+              ? 'bg-black text-white' 
+              : 'font-bold border-l bg-gray-100 hover:bg-gray-200 border border-black'
           }`}
         >
           Set Drop-off
@@ -228,7 +232,7 @@ const MapComponent = () => {
       </div>
 
       {/* Location display */}
-      <div className="grid grid-cols-2 gap-4 text-sm">
+      {/* <div className="grid grid-cols-2 gap-4 text-sm">
         <div className="p-2 rounded bg-red-50 border border-red-200">
           <span className="font-semibold">Pickup:</span>{' '}
           {pickup ? `${pickup.lng.toFixed(4)}, ${pickup.lat.toFixed(4)}` : 'Not set'}
@@ -237,7 +241,7 @@ const MapComponent = () => {
           <span className="font-semibold">Drop-off:</span>{' '}
           {dropoff ? `${dropoff.lng.toFixed(4)}, ${dropoff.lat.toFixed(4)}` : 'Not set'}
         </div>
-      </div>
+      </div> */}
 
       {/* Route information */}
       {routeError && (

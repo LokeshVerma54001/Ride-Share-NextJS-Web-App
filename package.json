@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.0.1",
+    "@kinde-oss/kinde-auth-react": "^4.0.4",
     "maplibre-gl": "^4.7.1",
     "next": "^15.0.1",
     "react": "19.0.0-rc-69d4b800-20241021",

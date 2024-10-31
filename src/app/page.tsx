@@ -1,18 +1,36 @@
-import Booking from "@/components/Booking/Booking";
-import MapComponent from "@/components/Map/Map";
-import { MapProvider } from "@/context/MapContext";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 export default function Home() {
+  const router = useRouter();
+  const { isSignedIn } = useAuth(); // Clerk's hook to check authentication status
+
+  const handleRider = () =>{
+    router.push("/rider");
+  }
+
+  const handleDriver = () =>{
+    router.push("/driver");
+  }
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      router.push("/sign-in"); // Redirect if not logged in
+    }
+  }, [isSignedIn, router]);
+
   return (
-    <MapProvider>
-      <div className="grid md:grid-cols-3 grid-cols-1">
-        <div className="">
-          <Booking />
-        </div>
-        <div className="col-span-2 order-first md:order-last">
-          <MapComponent />
+    <div className="h-[87vh] w-full flex justify-center items-center">
+      <div className="flex md:gap-16 gap-10 flex-col md:mt-20 mt-44 items-center h-[30rem] w-[25rem]">
+        <h1 className="font-bold md:text-4xl text-3xl">Welcome to Ride Share</h1>
+        <div className="flex flex-col gap-3">
+          <button onClick={handleRider} className="border font-bold border-black text-lg rounded-l md:p-5 p-3 hover:bg-black hover:text-white">Wanna Ride Someone?</button>
+          <button onClick={handleDriver} className="border border-black font-bold text-lg rounded-l md:p-5 p-3 hover:bg-black hover:text-white">Give Someone A Ride</button>
         </div>
       </div>
-    </MapProvider>
+    </div>
   );
 }
