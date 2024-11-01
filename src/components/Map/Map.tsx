@@ -139,9 +139,6 @@ const MapComponent = () => {
     };
   }, []);
 
-
-
-
   // Handle map clicks
   useEffect(() => {
     if (!map.current) return;
@@ -255,7 +252,7 @@ const MapComponent = () => {
       )}
 
       {/* Map container */}
-      <div className="relative w-full h-[500px] rounded-lg overflow-hidden">
+      <div className="relative w-full h-[570px] rounded-lg overflow-hidden">
         <div ref={mapContainer} className="w-full h-full" />
         {(!mapLoaded || isLoadingRoute) && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50">
