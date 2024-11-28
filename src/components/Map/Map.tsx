@@ -4,7 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useMap } from '@/context/MapContext';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@clerk/nextjs';
+import socket from '@/socket/socket';
+// import { useUser } from '@/context/UserContext';
 
 interface Location {
   lng: number;
@@ -13,7 +15,8 @@ interface Location {
 
 const MapComponent = () => {
   const { pickup, dropoff, setPickup, setDropoff } = useMap();
-  const {setUserLocation} = useUser();
+  // const {setUserLocation} = useUser();
+  const {user} = useUser();
 
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -139,6 +142,9 @@ const MapComponent = () => {
     };
   }, []);
 
+
+
+
   // Handle map clicks
   useEffect(() => {
     if (!map.current) return;
@@ -165,7 +171,8 @@ const MapComponent = () => {
           });
         }
         setPickup({ lng, lat });
-        setUserLocation({lng, lat});//user location set
+        // setUserLocation({lng, lat});//user location set
+        socket.emit('setStartingLocation', user, lng, lat);
       } else {
         if (dropoffMarker.current) {
           dropoffMarker.current.setLngLat([lng, lat]);
@@ -185,6 +192,7 @@ const MapComponent = () => {
           });
         }
         setDropoff({ lng, lat });
+        socket.emit('setDropoffLocation', user, lng, lat);
       }
     };
 

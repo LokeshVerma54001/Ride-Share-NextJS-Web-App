@@ -3,15 +3,21 @@
 import Booking from "@/components/Booking/Booking";
 import MapComponent from "@/components/Map/Map";
 import { MapProvider } from "@/context/MapContext";
-import { useUser } from "@/context/UserContext";
+import socket from "@/socket/socket";
+import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@/context/UserContext";
 import { useEffect } from "react";
 
 const Page = () => {
 
-  const {setUserType} = useUser();
+  // const {setUserType} = useUser();
+  const {user} = useUser();
 
   useEffect(()=>{
-    setUserType("rider");
+
+    socket.emit('setUserType', user, 'passanger');
+
+    // setUserType("rider");
   },[]);
 
   return (

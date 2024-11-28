@@ -1,3 +1,5 @@
+import socket from '@/socket/socket';
+import { useUser } from '@clerk/nextjs';
 import React, { useState } from 'react'
 
 
@@ -18,6 +20,7 @@ const PassangerDetails = ({onLocationSelect}: { onLocationSelect: (location: Loc
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<Key[]>([]);
   const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
+  const {user} = useUser();
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -49,6 +52,10 @@ const PassangerDetails = ({onLocationSelect}: { onLocationSelect: (location: Loc
     setShowDropdown(false); // Hide dropdown
   };
 
+  const handleSearch = () =>{
+    socket.emit('searchPassangers', user);
+  }
+
   return (
 <div className='pt-20 pb-20 md:justify-center md:pt-0 flex flex-col items-center w-full relative gap-5'>
   <h1 className='font-bold text-xl w-[90%] text-center'>Enter Your Location So We Can Find Passangers Near You</h1>
@@ -73,7 +80,7 @@ const PassangerDetails = ({onLocationSelect}: { onLocationSelect: (location: Loc
           ))}
         </ul>
       )}
-      <button className="p-3 bg-black w-[90%] text-white rounded-lg">Search</button>
+      <button onClick={handleSearch} className="p-3 bg-black w-[90%] text-white rounded-lg">Search</button>
       </div>
     </div>
   )

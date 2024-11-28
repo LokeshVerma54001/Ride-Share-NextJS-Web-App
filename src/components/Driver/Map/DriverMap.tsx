@@ -11,9 +11,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useUser } from '@/context/UserContext';
+// import socket from '@/socket/socket';
 
 
-const MapComponent = () => {
+const MapComponent = ({onLocationSelect}: { onLocationSelect: (location: Location) => void;}) => {
   const {userLocation, setUserLocation} = useUser();
 
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -80,6 +81,7 @@ const MapComponent = () => {
           });
         }
         setUserLocation({lng, lat});//user location set
+        onLocationSelect({lng:lng, lat:lat});
     };
 
     map.current.on('click', clickHandler);
